@@ -70,6 +70,12 @@ export default function ProductActionSection({
                         <FaShare size={14} />
                         Share
                     </button>
+                     <button
+                        onClick={() => setIsEnquiryOpen(true)}
+                        className="bg-[#2F4191] text-white px-5 py-2.5 rounded-full text-sm font-medium hover:bg-[#2B7EC2] transition duration-300 w-full sm:w-auto cursor-pointer hover:scale-105"
+                    >
+                        Get a Quote
+                    </button>
                     {product.price && (
                         <button
                             onClick={() => !priceUnlocked && setIsPriceOpen(true)}

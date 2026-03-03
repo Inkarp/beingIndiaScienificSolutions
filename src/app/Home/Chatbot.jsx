@@ -6,7 +6,7 @@ import { useState, useMemo, useRef, useEffect } from 'react';
 const MAIN_OPTIONS = [
   { id: 'Product', label: '🔬 Product Enquiry', desc: 'Browse & enquire about our lab equipment' },
   { id: 'Service', label: '🔧 Service Request', desc: 'Repair, calibration or AMC support' },
-  { id: 'Quote', label: '📄 Request a Quote', desc: 'Get a customised price quote' },
+  { id: 'Get a Quote', label: '📄 Request a Quote', desc: 'Get a customised price quote' },
   { id: 'Talk to expert', label: '💬 Talk to Expert', desc: 'Speak with our technical team' },
 ];
 
@@ -183,7 +183,7 @@ const FIELD_CONFIG = {
     { key: 'city',         label: 'City',             type: 'text',   required: false },
     { key: 'message',      label: 'Message',          type: 'textarea', required: false, fullWidth: true },
   ],
-  Quote: [
+  'Get a Quote': [
     { key: 'customerName',    label: 'Customer Name',     type: 'text',     required: true },
     { key: 'company',         label: 'Company Name',      type: 'text',     required: true },
     { key: 'email',           label: 'Email',             type: 'email',    required: true },
@@ -197,7 +197,7 @@ const FIELD_CONFIG = {
     { key: 'customerName',    label: 'Your Name',          type: 'text',     required: true },
     { key: 'email',           label: 'Email',              type: 'email',    required: true },
     { key: 'contact',         label: 'Contact Number',     type: 'tel',      required: true },
-    { key: 'company',         label: 'Company Name',       type: 'text',     required: false },
+    { key: 'company',         label: 'Company Name',       type: 'text',     required: true },
     { key: 'enquiredProduct', label: 'Product of Interest',type: 'text',     required: false },
     { key: 'city',            label: 'City',               type: 'text',     required: false },
     { key: 'message',         label: 'Message / Query',    type: 'textarea', required: false, fullWidth: true },
@@ -243,10 +243,11 @@ function FormField({ field, value, error, onChange }) {
   return (
     <div className={field.fullWidth ? 'col-span-2' : ''}>
       <label className="block text-xs text-gray-500 mb-1 font-medium">
-        {field.label}{field.required && <span className="text-red-400 ml-0.5">*</span>}
+        {/* {field.label}
+        {field.required && <span className="text-red-400 ml-0.5">*</span>} */}
       </label>
       {field.type === 'textarea' ? (
-        <textarea rows={3} placeholder={field.label} value={value}
+        <textarea rows={3} placeholder={field.label + (field.required ? ' *' : '')} value={value}
           onChange={(e) => onChange(field.key, e.target.value)} className={base + ' resize-none'} />
       ) : field.type === 'select' ? (
         <select value={value} onChange={(e) => onChange(field.key, e.target.value)} className={base}>
@@ -366,8 +367,8 @@ export default function Chatbot({ open, onClose }) {
       <p className="text-xs text-gray-400 mb-3 font-medium uppercase tracking-wide">How can we help?</p>
       {MAIN_OPTIONS.map((opt) => (
         <button key={opt.id} onClick={() => handleCategorySelect(opt.id)}
-          className="w-full text-left rounded-xl border border-gray-100 px-4 py-3 hover:border-[#2F4191] hover:bg-blue-50/60 transition group">
-          <div className="text-sm font-semibold text-gray-800 group-hover:text-[#2F4191]">{opt.label}</div>
+          className="w-full text-left bg-[#2F4191] rounded-xl border border-gray-100 px-4 py-3 hover:border-[#2F4191] hover:bg-blue-50/60 transition group">
+          <div className="text-sm font-semibold text-white group-hover:text-[#2F4191]">{opt.label}</div>
           <div className="text-xs text-gray-400 mt-0.5">{opt.desc}</div>
         </button>
       ))}
@@ -462,7 +463,7 @@ export default function Chatbot({ open, onClose }) {
   const stepTitles = { 0: 'How can we help?', 1: 'Select Product', 2: category ? `${category} Form` : 'Fill Details', 3: 'Submitted!' };
 
   return (
-    <div className="fixed bottom-24 right-6 z-50 w-[320px] bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden flex flex-col" style={{ maxHeight: '90vh' }}>
+    <div className="fixed bottom-5 right-15 z-50 w-[300px] md:w-[320px] bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden flex flex-col" style={{ maxHeight: '90vh' }}>
       <div className="flex items-center gap-2 bg-gradient-to-r from-[#2F4191] to-[#2B7EC2] text-white px-4 py-3 shrink-0">
         {(step === 1 || step === 2) && (
           <button onClick={handleBack} className="p-1 rounded-lg hover:bg-white/20 transition mr-1" aria-label="Go back">

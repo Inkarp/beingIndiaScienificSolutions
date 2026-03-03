@@ -57,7 +57,7 @@ export default function RootLayout({ children }) {
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} ${raleway.variable} ${dmSans.variable} ${montserrat.variable}`} >
+      className={`${geistSans.variable} ${geistMono.variable} `} >
       {/* // className={`${montserrat.variable}`} */}
       <head>
         <link rel="preload" href="/favicon.png" as="image" />
