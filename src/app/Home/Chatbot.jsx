@@ -186,7 +186,7 @@ const FIELD_CONFIG = {
     { key: 'contact',      label: 'Contact Number',   type: 'tel',    required: true },
     { key: 'company',      label: 'Company Name',     type: 'text',   required: false },
     { key: 'productName',  label: 'Product Name',     type: 'text',   required: true },
-    { key: 'serialNumber',  label: 'Serial Number',     type: 'text',   required: false },
+    { key: 'modelNumber',  label: 'Model Number',     type: 'text',   required: false },
     { key: 'serviceType',  label: 'Type of Service',  type: 'text',   required: true },
     { key: 'underWarranty',label: 'Under Warranty?',  type: 'select', options: ['Yes', 'No', 'Not Sure'], required: true, fullWidth: false },
     { key: 'country',      label: 'Country',          type: 'text',   required: false, readOnly: true },
@@ -269,14 +269,8 @@ function FormField({ field, value, error, onChange }) {
           {field.options.map((o) => <option key={o}>{o}</option>)}
         </select>
       ) : (
-        <input
-          type={field.type}
-          placeholder={field.label}
-          value={value}
-          onChange={field.readOnly ? undefined : (e) => onChange(field.key, e.target.value)}
-          readOnly={field.readOnly}
-          className={base}
-        />
+        <input type={field.type} placeholder={field.label} value={value}
+          onChange={(e) => onChange(field.key, e.target.value)} className={base} />
       )}
       {error && <p className="text-xs text-red-500 mt-1">{error}</p>}
     </div>
@@ -341,7 +335,7 @@ export default function Chatbot({ open, onClose }) {
     const tracking = collectTrackingData();
 
     const payload = {
-      category,
+      category: category === 'Get a Quote' ? 'Quote' : category,
       ...(category === 'Product' && { product: selectedProduct }),
       ...formData,
       submittedAt: new Date().toISOString(),
@@ -380,7 +374,7 @@ export default function Chatbot({ open, onClose }) {
 
   const handleReset = () => {
     setStep(0); setCategory(null); setSelectedProduct(''); setProductSearch('');
-    setFormData({ country: 'India' }); setErrors({}); setApiError(''); setShowCrossSell(false); setRecommendedProducts([]);
+    setFormData({}); setErrors({}); setApiError(''); setShowCrossSell(false); setRecommendedProducts([]);
   };
 
   // ─── Renders ───────────────────────────────────────────────────────────────
@@ -433,12 +427,8 @@ export default function Chatbot({ open, onClose }) {
       )}
       <div className="grid grid-cols-2 gap-2.5">
         {fields.map((field) => (
-          <FormField key={field.key}
-            field={field}
-            value={field.key === 'country' ? 'India' : (formData[field.key] || '')}
-            error={errors[field.key]}
-            onChange={handleFieldChange}
-          />
+          <FormField key={field.key} field={field} value={formData[field.key] || ''}
+            error={errors[field.key]} onChange={handleFieldChange} />
         ))}
       </div>
       <button onClick={handleSubmit} disabled={loading}

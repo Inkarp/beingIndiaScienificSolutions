@@ -34,7 +34,7 @@ const transporter = nodemailer.createTransport({
 // ─────────────────────────────────────────────────────────────────────────────
 
 const rateLimitStore  = new Map();
-const RATE_LIMIT_MAX    = 5;               // Max 5 submissions
+const RATE_LIMIT_MAX    = 50;              // Increased for development; reduce to 5 for production
 const RATE_LIMIT_WINDOW = 60 * 60 * 1000; // Per hour (ms)
 
 function checkRateLimit(ip) {

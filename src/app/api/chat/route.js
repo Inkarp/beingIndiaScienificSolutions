@@ -29,7 +29,7 @@ function getTransporter() {
 
 // ─── Rate Limiting (in-memory, per IP) ────────────────────────────────────────
 const rateLimitMap = new Map();
-const RATE_LIMIT_MAX    = 5;
+const RATE_LIMIT_MAX    = 50;  // Increased for development; reduce to 5 for production
 const RATE_LIMIT_WINDOW = 60 * 60 * 1000; // 1 hour
 
 function isRateLimited(ip) {
