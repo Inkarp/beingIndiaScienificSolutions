@@ -23,7 +23,7 @@ const INDIAN_STATES = [
 const INITIAL_FORM = {
   name: '', company: '', gstNumber: '', industry: '',
   designation: '', department: '', phone: '', email: '',
-  officialEmail: '', country: 'India', state: '', city: '', message: '',
+  country: 'India', state: '', city: '', message: '',
 };
 
 // ─── Tracking ─────────────────────────────────────────────────────────────────
@@ -80,16 +80,15 @@ function collectTracking() {
 // ─── Sanitizers ───────────────────────────────────────────────────────────────
 
 const SANITIZERS = {
-  name:          (v) => v.replace(/[^a-zA-Z\s]/g, '').replace(/\b\w/g, c => c.toUpperCase()),
-  company:       (v) => v.replace(/[^a-zA-Z0-9\s&.,()-]/g, ''),
-  gstNumber:     (v) => v.toUpperCase().slice(0, 15),
-  phone:         (v) => v.replace(/\D/g, '').slice(0, 10),
-  email:         (v) => v.replace(/\s/g, ''),
-  officialEmail: (v) => v.replace(/\s/g, ''),
-  city:          (v) => v.replace(/[^a-zA-Z\s]/g, ''),
-  industry:      (v) => v.replace(/[^a-zA-Z\s&/]/g, ''),
-  designation:   (v) => v.replace(/[^a-zA-Z\s.]/g, ''),
-  department:    (v) => v.replace(/[^a-zA-Z\s&/]/g, ''),
+  name:        (v) => v.replace(/[^a-zA-Z\s]/g, '').replace(/\b\w/g, c => c.toUpperCase()),
+  company:     (v) => v.replace(/[^a-zA-Z0-9\s&.,()-]/g, ''),
+  gstNumber:   (v) => v.toUpperCase().slice(0, 15),
+  phone:       (v) => v.replace(/\D/g, '').slice(0, 10),
+  email:       (v) => v.replace(/\s/g, ''),
+  city:        (v) => v.replace(/[^a-zA-Z\s]/g, ''),
+  industry:    (v) => v.replace(/[^a-zA-Z\s&/]/g, ''),
+  designation: (v) => v.replace(/[^a-zA-Z\s.]/g, ''),
+  department:  (v) => v.replace(/[^a-zA-Z\s&/]/g, ''),
 };
 
 function sanitizeField(name, value) {
@@ -101,28 +100,21 @@ function sanitizeField(name, value) {
 
 function validateAll(f) {
   const errs = {};
-  if (!f.name.trim())                        errs.name          = 'Full name is required';
-  if (!f.company.trim())                     errs.company        = 'Company name is required';
+  if (!f.name.trim())                         errs.name        = 'Full name is required';
+  if (!f.company.trim())                      errs.company     = 'Company name is required';
   if (f.gstNumber && !GST_REGEX.test(f.gstNumber))
-    errs.gstNumber = 'Enter a valid 15-digit GSTIN';
-  if (!f.industry.trim())                    errs.industry      = 'Industry is required';
-  if (!f.designation.trim())                 errs.designation   = 'Designation is required';
-  if (!f.department.trim())                  errs.department    = 'Department is required';
-  if (!PHONE_REGEX.test(f.phone))            errs.phone         = 'Enter a valid 10-digit number';
-  if (!EMAIL_REGEX.test(f.email))            errs.email         = 'Enter a valid personal email';
-  if (!EMAIL_REGEX.test(f.officialEmail))    errs.officialEmail = 'Enter a valid official email';
-  if (f.email && f.email === f.officialEmail) errs.officialEmail = 'Must differ from personal email';
-  if (!f.state)                              errs.state         = 'Please select your state';
-  if (!f.city.trim())                        errs.city          = 'City is required';
+                                              errs.gstNumber   = 'Enter a valid 15-digit GSTIN';
+  if (!f.industry.trim())                     errs.industry    = 'Industry is required';
+  if (!f.designation.trim())                  errs.designation = 'Designation is required';
+  if (!f.department.trim())                   errs.department  = 'Department is required';
+  if (!PHONE_REGEX.test(f.phone))             errs.phone       = 'Enter a valid 10-digit number';
+  if (!EMAIL_REGEX.test(f.email))             errs.email       = 'Enter a valid email address';
+  if (!f.state)                               errs.state       = 'Please select your state';
+  if (!f.city.trim())                         errs.city        = 'City is required';
   return errs;
 }
 
-// ─── Design tokens (single source of truth) ───────────────────────────────────
-// Border: border-[#94a3b8] — visible slate-400 (much stronger than gray-200)
-// Focus border: border-[#2F4191] with ring
-// Label: text-[#1e293b] font-semibold text-sm — dark & readable
-// Input text: text-[#0f172a] text-[15px] — near-black, comfortable size
-// Placeholder: placeholder-[#94a3b8] — distinct but not distracting
+// ─── Design tokens ────────────────────────────────────────────────────────────
 
 const INPUT_BASE = [
   'w-full h-13 px-4 py-3',
@@ -135,17 +127,14 @@ const INPUT_BASE = [
   'hover:border-[#64748b]',
 ].join(' ');
 
-const INPUT_ERROR = 'border-2 border-red-400 bg-red-50 focus:ring-red-200 focus:border-red-500';
+const INPUT_ERROR    = 'border-2 border-red-400 bg-red-50 focus:ring-red-200 focus:border-red-500';
 const INPUT_READONLY = 'border-2 border-[#cbd5e1] bg-slate-50 text-[#64748b] cursor-not-allowed';
 
 // ─── Field Components ─────────────────────────────────────────────────────────
 
 function Label({ children, required, htmlFor }) {
   return (
-    <label
-      htmlFor={htmlFor}
-      className="block text-sm font-bold text-[#1e293b] mb-2 tracking-wide"
-    >
+    <label htmlFor={htmlFor} className="block text-sm font-bold text-[#1e293b] mb-2 tracking-wide">
       {children}
       {required && <span className="text-red-500 ml-1 text-base leading-none">*</span>}
     </label>
@@ -165,7 +154,7 @@ function ErrorMsg({ msg }) {
 }
 
 function TextInput({ label, name, value, onChange, errors, type = 'text', placeholder, required, readOnly, id }) {
-  const err = errors?.[name];
+  const err     = errors?.[name];
   const inputId = id || name;
   return (
     <div>
@@ -174,8 +163,53 @@ function TextInput({ label, name, value, onChange, errors, type = 'text', placeh
         id={inputId} name={name} type={type} value={value}
         onChange={onChange} placeholder={placeholder}
         required={required} readOnly={readOnly}
-        className={`${readOnly ? INPUT_READONLY : err ? `${INPUT_BASE} ${INPUT_ERROR}` : INPUT_BASE}`}
+        className={readOnly ? INPUT_READONLY + ' w-full h-13 px-4 py-3 text-[15px] font-medium rounded-xl border-2 outline-none' : err ? `${INPUT_BASE} ${INPUT_ERROR}` : INPUT_BASE}
       />
+      <ErrorMsg msg={err} />
+    </div>
+  );
+}
+
+// ─── Email Input with personal / official toggle ──────────────────────────────
+function EmailInput({ value, onChange, errors }) {
+  const [type, setType] = useState('personal'); // 'personal' | 'official'
+  const err = errors?.email;
+
+  const placeholder = type === 'personal' ? 'yourname@gmail.com' : 'name@company.com';
+  const hint        = type === 'personal'
+    ? 'Personal email (Gmail, Outlook, etc.)'
+    : 'Official / work email address';
+
+  return (
+    <div>
+      <Label required htmlFor="email">Email Address</Label>
+
+      {/* Toggle pill */}
+      <div className="inline-flex mb-2.5 p-1 rounded-xl bg-slate-100 border border-[#cbd5e1] gap-1">
+        {['personal', 'official'].map((t) => (
+          <button
+            key={t}
+            type="button"
+            onClick={() => setType(t)}
+            className={[
+              'px-4 py-1.5 rounded-lg text-[13px] font-bold capitalize transition-all duration-150',
+              type === t
+                ? 'bg-[#2F4191] text-white shadow-sm'
+                : 'text-[#64748b] hover:text-[#1e293b]',
+            ].join(' ')}
+          >
+            {t === 'personal' ? '👤 Personal' : '🏢 Official'}
+          </button>
+        ))}
+      </div>
+
+      <input
+        id="email" name="email" type="email"
+        value={value} onChange={onChange}
+        placeholder={placeholder} required
+        className={err ? `${INPUT_BASE} ${INPUT_ERROR}` : INPUT_BASE}
+      />
+      <p className="text-[11px] text-[#64748b] font-medium mt-1.5">{hint}</p>
       <ErrorMsg msg={err} />
     </div>
   );
@@ -187,9 +221,7 @@ function PhoneInput({ value, onChange, errors }) {
     <div>
       <Label required htmlFor="phone">Phone Number</Label>
       <div className={[
-        'flex rounded-xl overflow-hidden',
-        'border-2 transition-all duration-150',
-        'focus-within:ring-4',
+        'flex rounded-xl overflow-hidden border-2 transition-all duration-150 focus-within:ring-4',
         err
           ? 'border-red-400 bg-red-50 focus-within:ring-red-200 focus-within:border-red-500'
           : 'border-[#94a3b8] hover:border-[#64748b] focus-within:border-[#2F4191] focus-within:ring-[#2F4191]/15',
@@ -216,12 +248,7 @@ function StateSelect({ value, onChange, errors }) {
       <div className="relative">
         <select
           id="state" name="state" value={value} onChange={onChange} required
-          className={[
-            INPUT_BASE,
-            'pr-10 appearance-none cursor-pointer',
-            err ? INPUT_ERROR : '',
-            !value ? 'text-[#94a3b8]' : 'text-[#0f172a]',
-          ].join(' ')}
+          className={[INPUT_BASE, 'pr-10 appearance-none cursor-pointer', err ? INPUT_ERROR : '', !value ? 'text-[#94a3b8]' : 'text-[#0f172a]'].join(' ')}
         >
           <option value="" disabled>Select your state</option>
           {INDIAN_STATES.map((s) => (
@@ -240,8 +267,7 @@ function StateSelect({ value, onChange, errors }) {
 }
 
 function GSTInput({ value, onChange, errors }) {
-  const err = errors?.gstNumber;
-  // Only show ✓ / ✗ when the user has actually typed something
+  const err      = errors?.gstNumber;
   const hasValue = value.length > 0;
   const isValid  = hasValue && GST_REGEX.test(value);
   const isWrong  = hasValue && !isValid;
@@ -255,13 +281,8 @@ function GSTInput({ value, onChange, errors }) {
         <input
           id="gstNumber" name="gstNumber" value={value} onChange={onChange}
           placeholder="Leave blank if not available" maxLength={15}
-          className={[
-            INPUT_BASE,
-            'pr-10 font-mono tracking-widest uppercase',
-            err || isWrong ? INPUT_ERROR : '',
-          ].join(' ')}
+          className={[INPUT_BASE, 'pr-10 font-mono tracking-widest uppercase', err || isWrong ? INPUT_ERROR : ''].join(' ')}
         />
-        {/* Only show tick/cross once user starts typing */}
         {hasValue && (
           <span className={`absolute right-3.5 top-1/2 -translate-y-1/2 font-bold text-base ${isValid ? 'text-green-600' : 'text-red-500'}`}>
             {isValid ? '✓' : '✗'}
@@ -269,7 +290,7 @@ function GSTInput({ value, onChange, errors }) {
         )}
       </div>
       <p className="text-[11px] text-[#64748b] font-medium mt-1.5">
-        If entering, use format: <span className="font-mono tracking-wider">22AAAAA0000A1Z5</span> (15 chars)
+        Format: <span className="font-mono tracking-wider">22AAAAA0000A1Z5</span> (15 chars)
       </p>
       <ErrorMsg msg={err} />
     </div>
@@ -400,10 +421,7 @@ export default function PriceEnquiryForm({ isOpen, onClose, productData, onSucce
         </div>
 
         {/* ── SCROLLABLE BODY ── */}
-        <div
-          className="overflow-y-auto flex-1"
-          style={{ scrollbarWidth: 'thin', scrollbarColor: '#94a3b8 transparent' }}
-        >
+        <div className="overflow-y-auto flex-1" style={{ scrollbarWidth: 'thin', scrollbarColor: '#94a3b8 transparent' }}>
 
           {/* ── PRODUCT CARD ── */}
           {productData && (
@@ -417,11 +435,6 @@ export default function PriceEnquiryForm({ isOpen, onClose, productData, onSucce
                 <div className="flex-1 min-w-0">
                   <p className="text-[11px] uppercase tracking-[2px] font-bold text-[#2B7EC2] mb-0.5">Selected Product</p>
                   <p className="text-base font-black text-[#2F4191] truncate">{productData.model}</p>
-                  {/* {productData.price && (
-                    <p className="text-sm text-emerald-700 font-bold mt-0.5">
-                      Starting at ₹{Number(productData.price).toLocaleString('en-IN')}
-                    </p>
-                  )} */}
                 </div>
                 <div className="shrink-0 flex items-center gap-1.5 bg-[#2F4191] text-white px-3.5 py-2 rounded-full text-[11px] font-black uppercase tracking-wider shadow-sm">
                   <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
@@ -443,8 +456,7 @@ export default function PriceEnquiryForm({ isOpen, onClose, productData, onSucce
                 onChange={handleChange} errors={errors} placeholder="e.g. Ravi Kumar" required />
               <TextInput label="Designation" name="designation" value={formData.designation}
                 onChange={handleChange} errors={errors} placeholder="e.g. Manager, Director" required />
-              <TextInput label="Personal Email" name="email" type="email" value={formData.email}
-                onChange={handleChange} errors={errors} placeholder="yourname@gmail.com" required />
+              <EmailInput value={formData.email} onChange={handleChange} errors={errors} />
               <PhoneInput value={formData.phone} onChange={handleChange} errors={errors} />
             </div>
 
@@ -453,8 +465,6 @@ export default function PriceEnquiryForm({ isOpen, onClose, productData, onSucce
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               <TextInput label="Company Name" name="company" value={formData.company}
                 onChange={handleChange} errors={errors} placeholder="Your company name" required />
-              <TextInput label="Official Email" name="officialEmail" type="email" value={formData.officialEmail}
-                onChange={handleChange} errors={errors} placeholder="name@company.com" required />
               <GSTInput value={formData.gstNumber} onChange={handleChange} errors={errors} />
               <TextInput label="Industry" name="industry" value={formData.industry}
                 onChange={handleChange} errors={errors} placeholder="e.g. Pharma, Research" required />
@@ -501,10 +511,7 @@ export default function PriceEnquiryForm({ isOpen, onClose, productData, onSucce
 
             {/* ── API ERROR ── */}
             {apiError && (
-              <div
-                data-form-error
-                className="flex items-start gap-3 p-4 bg-red-50 border-2 border-red-300 rounded-xl"
-              >
+              <div data-form-error className="flex items-start gap-3 p-4 bg-red-50 border-2 border-red-300 rounded-xl">
                 <span className="text-xl mt-0.5">⚠️</span>
                 <div>
                   <p className="text-sm font-black text-red-700">Submission Failed</p>
@@ -513,16 +520,17 @@ export default function PriceEnquiryForm({ isOpen, onClose, productData, onSucce
               </div>
             )}
 
-            {/* ── VALIDATION SUMMARY (if many errors) ── */}
+            {/* ── VALIDATION SUMMARY ── */}
             {Object.keys(errors).length > 2 && (
-              <div
-                data-form-error
-                className="flex items-start gap-3 p-4 bg-amber-50 border-2 border-amber-300 rounded-xl"
-              >
+              <div data-form-error className="flex items-start gap-3 p-4 bg-amber-50 border-2 border-amber-300 rounded-xl">
                 <span className="text-xl mt-0.5">📋</span>
                 <div>
-                  <p className="text-sm font-black text-amber-800">Please fix {Object.keys(errors).length} fields before submitting</p>
-                  <p className="text-xs font-medium text-amber-700 mt-0.5">Each field with an error is highlighted in red below it.</p>
+                  <p className="text-sm font-black text-amber-800">
+                    Please fix {Object.keys(errors).length} fields before submitting
+                  </p>
+                  <p className="text-xs font-medium text-amber-700 mt-0.5">
+                    Each field with an error is highlighted in red below it.
+                  </p>
                 </div>
               </div>
             )}

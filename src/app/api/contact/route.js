@@ -50,7 +50,7 @@ export async function POST(request) {
       designation,
       department,
       email,
-      officialEmail,
+      // officialEmail,
       phone,
       typeOfCustomer,
       purchasePlan,
@@ -74,7 +74,7 @@ export async function POST(request) {
       !designation ||
       !department ||
       !email ||
-      !officialEmail ||
+      // !officialEmail ||
       !phone ||
       !typeOfCustomer ||
       !purchasePlan ||
@@ -87,7 +87,7 @@ export async function POST(request) {
       );
     }
 
-    if (!emailRegex.test(email) || !emailRegex.test(officialEmail)) {
+    if (!emailRegex.test(email)) {
       return NextResponse.json(
         { error: "Invalid email format" },
         { status: 400 }
@@ -120,7 +120,7 @@ export async function POST(request) {
       designation,
       department,
       email,
-      officialEmail,
+      // officialEmail,
       phone,
       typeOfCustomer,
       purchasePlan,
@@ -142,7 +142,7 @@ export async function POST(request) {
     const mailOptions = {
       from: `"Website Enquiry" <${process.env.EMAIL_USER}>`,
       to: COMPANY_EMAIL,
-      replyTo: officialEmail,
+      replyTo: email,
       subject: `New Enquiry | ${name} | ${company}`,
       html: `
         <div style="font-family:Arial;max-width:650px;margin:auto;background:#0f172a;padding:30px;border-radius:16px;">
@@ -158,7 +158,7 @@ export async function POST(request) {
             ${row("Designation", designation)}
             ${row("Department", department)}
             ${row("Personal Email", email)}
-            ${row("Official Email", officialEmail)}
+       
             ${row("Phone", `+91 ${phone}`)}
             ${row("Type of Customer", typeOfCustomer)}
             ${row("Purchase Plan", purchasePlan)}

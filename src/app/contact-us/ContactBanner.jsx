@@ -4,12 +4,12 @@ export default function ContactHeader() {
     <section className="relative h-[300px] w-full overflow-hidden">
       {/* Background image with dark overlay */}
       <div className="absolute inset-0">
-        <img
+        {/* <img
           src="/about-us.png" // Replace with actual image
           alt="Contact Banner"
           className="w-full h-full object-cover"
-        />
-        <div className="absolute inset-0 bg-blue-900 opacity-60" />
+        /> */}
+        <div className="absolute inset-0 bg-[#2F4191] rounded-xl" />
       </div>
 
       {/* Content */}

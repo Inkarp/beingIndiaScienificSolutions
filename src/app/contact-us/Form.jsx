@@ -11,7 +11,7 @@ export default function Form() {
         designation: '',
         department: '',
         email: '',
-        officialEmail: '',
+        // officialEmail: '',
         phone: '',
         typeOfCustomer: '',
         purchasePlan: '',
@@ -103,7 +103,7 @@ export default function Form() {
         }
 
         // Email → No spaces
-        if (name === 'email' || name === 'officialEmail') {
+        if (name === 'email') {
             value = value.replace(/\s/g, '');
         }
 
@@ -115,7 +115,7 @@ export default function Form() {
 
         if (form.phone.length !== 10) return "Phone must be 10 digits";
         if (!emailRegex.test(form.email)) return "Invalid Personal Email";
-        if (!emailRegex.test(form.officialEmail)) return "Invalid Official Email";
+        // if (!emailRegex.test(form.officialEmail)) return "Invalid Official Email";
 
         return null;
     };
@@ -148,7 +148,7 @@ export default function Form() {
             setForm(prev => ({
                 ...prev,
                 name: '', company: '', industry: '', designation: '',
-                department: '', email: '', officialEmail: '',
+                department: '', email: '', 
                 phone: '', typeOfCustomer: '', purchasePlan: '',
                 state: '', city: '', message: ''
             }));
@@ -217,8 +217,8 @@ export default function Form() {
                                 />
                             </div>
 
-                            <Input name="email" type="email" placeholder="Personal Email *" value={form.email} onChange={handleChange} required />
-                            <Input name="officialEmail" type="email" placeholder="Official Email *" value={form.officialEmail} onChange={handleChange} required />
+                            <Input name="email" type="email" placeholder="Personal/Official Email *" value={form.email} onChange={handleChange} required />
+                            {/* <Input name="officialEmail" type="email" placeholder="Official Email *" value={form.officialEmail} onChange={handleChange} required /> */}
 
                             {/* Country (Read Only) */}
                             <input

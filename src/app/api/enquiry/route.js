@@ -47,7 +47,7 @@ export async function POST(request) {
       'department',
       'phone',
       'email',
-      'officialEmail',
+      // 'officialEmail',
       'state',
       'city',
       'product'
@@ -68,7 +68,7 @@ export async function POST(request) {
       return NextResponse.json({ error: 'Invalid phone number' }, { status: 400 });
     }
 
-    if (!emailRegex.test(formData.email) || !emailRegex.test(formData.officialEmail)) {
+    if (!emailRegex.test(formData.email) ) {
       return NextResponse.json({ error: 'Invalid email format' }, { status: 400 });
     }
 
@@ -144,7 +144,7 @@ export async function POST(request) {
         ${generateRow("Department", formData.department)}
         ${generateRow("Phone", "+91 " + formData.phone)}
         ${generateRow("Personal Email", formData.email)}
-        ${generateRow("Official Email", formData.officialEmail)}
+      
         ${generateRow("Country", formData.country || "India")}
         ${generateRow("State", formData.state)}
         ${generateRow("City", formData.city)}

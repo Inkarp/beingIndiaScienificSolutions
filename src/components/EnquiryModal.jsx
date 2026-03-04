@@ -11,7 +11,7 @@ const INITIAL_STATE = {
   department: '',
   phone: '',
   email: '',
-  officialEmail: '',
+  // officialEmail: '',
   country: 'India',
   state: '',
   city: '',
@@ -155,7 +155,7 @@ export default function EnquiryModal({ isOpen, onClose, productData }) {
     }
 
     // Email no spaces
-    if (name === 'email' || name === 'officialEmail') {
+    if (name === 'email') {
       value = value.replace(/\s/g, '');
     }
 
@@ -190,7 +190,7 @@ export default function EnquiryModal({ isOpen, onClose, productData }) {
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(formData.email) || !emailRegex.test(formData.officialEmail)) {
+    if (!emailRegex.test(formData.email)) {
       setError('Invalid email format');
       setLoading(false);
       return;
@@ -260,7 +260,7 @@ export default function EnquiryModal({ isOpen, onClose, productData }) {
         body: JSON.stringify({ email: formData.email }),
       });
       const data = await res.json();
-  
+
       console.log("Send OTP Response:", data);
 
       if (!res.ok) {
@@ -351,7 +351,7 @@ export default function EnquiryModal({ isOpen, onClose, productData }) {
             <Input
               name="email"
               type="email"
-              placeholder="Personal Email *"
+              placeholder="Personal/Official Email *"
               value={formData.email}
               onChange={handleChange}
               required
@@ -394,16 +394,17 @@ export default function EnquiryModal({ isOpen, onClose, productData }) {
           )}
           {otpError && <p className="text-red-500 text-sm">{otpError}</p>}
 
-          <Input name="officialEmail" type="email" placeholder="Official Email *" value={formData.officialEmail} onChange={handleChange} required />
-          <Input name="city" placeholder="City *" value={formData.city} onChange={handleChange} required />
+          <div className="col-span-full grid md:grid-cols-2 gap-2">
+            <Input name="city" placeholder="City *" value={formData.city} onChange={handleChange} required />
 
-          <select name="state" value={formData.state} onChange={handleChange} required className="w-full border border-gray-300 px-3 py-2 rounded">
-            <option value="">Select State *</option>
-            {INDIAN_STATES.map(s => <option key={s}>{s}</option>)}
-          </select>
-
-          <div className="flex flex-col gap-5">
-            <input value="India" readOnly className="w-full border border-gray-300 px-3 py-2 rounded bg-gray-100" />
+            <select name="state" value={formData.state} onChange={handleChange} required className="w-full border border-gray-300 px-3 py-2 rounded">
+              <option value="">Select State *</option>
+              {INDIAN_STATES.map(s => <option key={s}>{s}</option>)}
+            </select>
+            {/* <input value="India" readOnly className="w-full border border-gray-300 px-3 py-2 rounded bg-gray-100" /> */}
+          </div>
+          <div className="col-span-full gap-5">
+            
             <textarea
               name="message"
               rows="2"
@@ -414,39 +415,42 @@ export default function EnquiryModal({ isOpen, onClose, productData }) {
             />
 
           </div>
+
           {error && <p className="text-red-500 text-sm border border-red-500 rounded px-2 py-1 ">{error}</p>}
-          <button
-            type="submit"
-            disabled={loading || submitted}
-            className={`w-full py-3 rounded-md text-sm font-medium flex items-center justify-center gap-2 transition
+          <div className='col-span-full'>
+            <button
+              type="submit"
+              disabled={loading || submitted}
+              className={`w-full py-3 rounded-md text-sm font-medium flex items-center justify-center gap-2 transition
               ${submitted
-                ? 'bg-[#2B7EC2] text-white'
-                : 'bg-[#2F4191] text-white hover:bg-[#2B7EC2]'
-              }
+                  ? 'bg-[#2B7EC2] text-white'
+                  : 'bg-[#2F4191] text-white hover:bg-[#2B7EC2]'
+                }
               ${(loading || submitted) && 'opacity-80 cursor-not-allowed'}
             `}
-          >
-            {loading && (
-              <>
-                <span className="w-4 h-4 border-2 border-white/50 border-t-white rounded-full animate-spin" />
-                Sending...
-              </>
-            )}
+            >
+              {loading && (
+                <>
+                  <span className="w-4 h-4 border-2 border-white/50 border-t-white rounded-full animate-spin" />
+                  Sending...
+                </>
+              )}
 
-            {!loading && submitted && (
-              <>
-                <FaCheckCircle />
-                Enquiry Sent Successfully
-              </>
-            )}
+              {!loading && submitted && (
+                <>
+                  <FaCheckCircle />
+                  Enquiry Sent Successfully
+                </>
+              )}
 
-            {!loading && !submitted && (
-              <>
-                <FaPaperPlane />
-                Send Enquiry
-              </>
-            )}
-          </button>
+              {!loading && !submitted && (
+                <>
+                  <FaPaperPlane />
+                  Send Enquiry
+                </>
+              )}
+            </button>
+          </div>
         </form>
       </div>
     </div>
