@@ -5,25 +5,26 @@ import SearchOverlay from './SearchOverlay';
 import HeaderOne from './HeaderOne';
 import Image from 'next/image';
 
-const FULL_LINE1    = 'India';
-const FULL_LINE2    = 'Scientific Solutions';
-const SUBTITLE      = 'Discover our cutting-edge solutions to accelerate scientific excellence.';
-const TYPING_SPEED  = 80;
+const FULL_LINE1   = 'India';
+const FULL_LINE2   = 'Scientific Solutions';
+const SUBTITLE     = 'Discover our cutting-edge solutions to accelerate scientific excellence.';
+const TYPING_SPEED = 80;
+
+// Key used to remember if the hero animation has already played
+const ANIM_PLAYED_KEY = 'heroAnimPlayed';
 
 export default function HeroOne() {
-  const [animKey,          setAnimKey]          = useState(0);
-  const [line1,            setLine1]            = useState('');
-  const [line2,            setLine2]            = useState('');
-  const [subtitle,         setSubtitle]         = useState('');
-  const [showCursor1,      setShowCursor1]      = useState(false);
-  const [showCursor2,      setShowCursor2]      = useState(false);
-  const [showCursorSub,    setShowCursorSub]    = useState(false);
-  const [badgeVisible,     setBadgeVisible]     = useState(false);
-  const [indiaFullyTyped,  setIndiaFullyTyped]  = useState(false);
-  const [logoVisible,      setLogoVisible]      = useState(false);
-  const [isSearchOpen,     setIsSearchOpen]     = useState(false);
-  // Nav slides in from right once the full typing sequence completes
-  const [navVisible,       setNavVisible]       = useState(false);
+  const [animKey,         setAnimKey]         = useState(0);
+  const [line1,           setLine1]           = useState('');
+  const [line2,           setLine2]           = useState('');
+  const [subtitle,        setSubtitle]        = useState('');
+  const [showCursor1,     setShowCursor1]     = useState(false);
+  const [showCursor2,     setShowCursor2]     = useState(false);
+  const [showCursorSub,   setShowCursorSub]   = useState(false);
+  const [indiaFullyTyped, setIndiaFullyTyped] = useState(false);
+  const [logoVisible,     setLogoVisible]     = useState(false);
+  const [isSearchOpen,    setIsSearchOpen]    = useState(false);
+  const [navVisible,      setNavVisible]      = useState(false);
 
   const sectionRef  = useRef(null);
   const timeoutsRef = useRef([]);
@@ -32,6 +33,19 @@ export default function HeroOne() {
     timeoutsRef.current.forEach(clearTimeout);
     timeoutsRef.current = [];
   };
+
+  // Show everything instantly (skip animation)
+  const showInstantly = useCallback(() => {
+    setLine1(FULL_LINE1);
+    setLine2(FULL_LINE2);
+    setSubtitle(SUBTITLE);
+    setIndiaFullyTyped(true);
+    setLogoVisible(true);
+    setNavVisible(true);
+    setShowCursor1(false);
+    setShowCursor2(false);
+    setShowCursorSub(false);
+  }, []);
 
   const typeText = useCallback(
     (fullText, setter, setCursor, onDone, startDelay = 0) => {
@@ -68,29 +82,37 @@ export default function HeroOne() {
     setShowCursor1(false);
     setShowCursor2(false);
     setShowCursorSub(false);
-    setBadgeVisible(false);
     setIndiaFullyTyped(false);
     setLogoVisible(false);
     setNavVisible(false);
 
-    const tBadge = setTimeout(() => setBadgeVisible(true), 200);
-    const tLogo  = setTimeout(() => setLogoVisible(true),  400);
-    timeoutsRef.current.push(tBadge, tLogo);
+    const tLogo = setTimeout(() => setLogoVisible(true), 400);
+    timeoutsRef.current.push(tLogo);
 
     typeText(FULL_LINE1, setLine1, setShowCursor1, () => {
       setIndiaFullyTyped(true);
       typeText(FULL_LINE2, setLine2, setShowCursor2, () => {
         typeText(SUBTITLE, setSubtitle, setShowCursorSub, () => {
-          // ← trigger nav after entire typing sequence ends
           const tNav = setTimeout(() => setNavVisible(true), 300);
           timeoutsRef.current.push(tNav);
+          // Mark animation as played for this session
+          try { sessionStorage.setItem(ANIM_PLAYED_KEY, '1'); } catch (_) {}
         }, 300);
       });
     }, 500);
   }, [typeText]);
 
-  // Restart animation every time section enters viewport
+  // On mount: check sessionStorage — skip animation if already played
   useEffect(() => {
+    let alreadyPlayed = false;
+    try { alreadyPlayed = !!sessionStorage.getItem(ANIM_PLAYED_KEY); } catch (_) {}
+
+    if (alreadyPlayed) {
+      showInstantly();
+      return;
+    }
+
+    // Only watch IntersectionObserver for first-ever load
     const el = sectionRef.current;
     if (!el) return;
     const obs = new IntersectionObserver(
@@ -99,25 +121,25 @@ export default function HeroOne() {
     );
     obs.observe(el);
     return () => obs.disconnect();
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (animKey === 0) return;
+    let alreadyPlayed = false;
+    try { alreadyPlayed = !!sessionStorage.getItem(ANIM_PLAYED_KEY); } catch (_) {}
+    if (alreadyPlayed) { showInstantly(); return; }
     startAnimation();
     return clearAll;
-  }, [animKey, startAnimation]);
+  }, [animKey, startAnimation, showInstantly]);
 
-  /* ── Render line 1 ──────────────────────────────────────────── */
+  /* ── Render line 1 ── */
   const renderLine1 = () => {
     const hasIndia = line1.length > 0;
     return (
       <span className="inline-flex flex-wrap items-center gap-x-3 leading-tight">
-        {/* "Welcome to" fades in with logo */}
         <span className={`opacity-0 ${logoVisible ? 'logo-fade-in' : ''}`}>
           Welcome to
         </span>
-
-        {/* Logo — white-inverted, vertically centred */}
         <span
           className={`inline-flex items-center opacity-0 ${logoVisible ? 'logo-fade-in' : ''}`}
           style={{ verticalAlign: 'middle' }}
@@ -131,8 +153,6 @@ export default function HeroOne() {
             style={{ filter: 'brightness(0) invert(1)' }}
           />
         </span>
-
-        {/* "India" — tricolour + underline */}
         {hasIndia && (
           <span className={`relative inline-block ${indiaFullyTyped ? 'india-revealed' : ''}`}>
             <span className="india-text">{line1}</span>
@@ -141,19 +161,16 @@ export default function HeroOne() {
             )}
           </span>
         )}
-
         {showCursor1 && <span className="typing-cursor" />}
       </span>
     );
   };
 
-  /* ── JSX ────────────────────────────────────────────────────── */
   return (
     <>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;700&display=swap');
 
-        /* keyframes */
         @keyframes indiaSlideIn {
           0%   { clip-path:inset(0 100% 0 0); opacity:.3; transform:translateX(-10px); }
           65%  { clip-path:inset(0 0 0 0);    opacity:1;  transform:translateX(3px);  }
@@ -162,10 +179,6 @@ export default function HeroOne() {
         @keyframes underlineExpand {
           0%   { width:0;    opacity:0; }
           100% { width:100%; opacity:1; }
-        }
-        @keyframes badgeFadeUp {
-          0%   { opacity:0; transform:translateY(14px); }
-          100% { opacity:1; transform:translateY(0);    }
         }
         @keyframes logoFadeIn {
           0%   { opacity:0; transform:translateY(10px); }
@@ -179,21 +192,14 @@ export default function HeroOne() {
           0%,100% { opacity:1; }
           50%     { opacity:0; }
         }
-        /* nav slides in from the right */
         @keyframes navSlideIn {
           0%   { transform:translateX(110%); opacity:0; }
           65%  { transform:translateX(-8px); opacity:1; }
           100% { transform:translateX(0);   opacity:1; }
         }
-        @keyframes scrollBounce {
-          0%,100% { transform:translateY(0)   translateX(-50%); }
-          50%     { transform:translateY(8px) translateX(-50%); }
-        }
 
-        /* utility classes */
-        .logo-fade-in  { animation: logoFadeIn  .5s ease forwards; }
-        .badge-visible { animation: badgeFadeUp .6s ease forwards; }
-        .search-visible{ animation: searchFadeIn .55s .2s ease forwards; }
+        .logo-fade-in   { animation: logoFadeIn   .5s ease forwards; }
+        .search-visible { animation: searchFadeIn .55s .2s ease forwards; }
 
         .india-text {
           display: inline-block;
@@ -226,18 +232,6 @@ export default function HeroOne() {
           animation: blink .75s step-end infinite;
         }
 
-        /* made-in badge base (opacity starts 0; .badge-visible animates it in) */
-        .made-in-badge {
-          display: inline-flex; align-items: center; gap: 6px;
-          background: rgba(255,255,255,.08);
-          border: 1px solid rgba(255,200,0,.45);
-          backdrop-filter: blur(8px);
-          padding: 5px 14px 5px 10px; border-radius: 100px;
-          font-size: 12px; font-weight: 700; letter-spacing:.1em;
-          color: #FFD700; text-transform: uppercase;
-          margin-bottom: 12px; opacity: 0;
-        }
-
         /* nav panel */
         .nav-panel {
           opacity: 0;
@@ -246,15 +240,11 @@ export default function HeroOne() {
         .nav-panel.nav-in {
           animation: navSlideIn .9s cubic-bezier(.22,1,.36,1) forwards;
         }
-
-        /* scroll indicator */
-        .scroll-indicator {
-          animation: scrollBounce 1.6s ease-in-out infinite;
-          position: absolute;
-          bottom: 2rem;
-          left: 50%;
-          display: flex; flex-direction: column; align-items: center; gap: 4px;
-          color: white; opacity: .8; z-index: 20;
+        /* When nav should show instantly (no animation needed) */
+        .nav-panel.nav-instant {
+          opacity: 1 !important;
+          transform: translateX(0) !important;
+          animation: none !important;
         }
       `}</style>
 
@@ -263,32 +253,17 @@ export default function HeroOne() {
         className="relative w-full lg:h-[800px] h-[500px] overflow-hidden"
         style={{ fontFamily: "'DM Sans', sans-serif" }}
       >
-        {/* Background image (desktop only) */}
         <Image
           src="/HeroImage.webp"
           alt="Hero background"
           fill priority quality={100} sizes="100vw"
           className="object-cover absolute inset-0 hidden lg:block"
         />
-
-        {/* Gradient overlay on desktop */}
         <div className="absolute inset-0 z-10 bg-gradient-to-r from-black/60 via-black/30 to-transparent hidden lg:block" />
-
-        {/* Mobile solid bg */}
         <div className="absolute inset-0 bg-[#2B7EC2] lg:hidden" />
 
-        {/* ── Hero content ── */}
         <div className="relative z-20 h-full flex items-start lg:mt-20 mt-0 px-6 md:px-14 lg:px-24">
           <div className="w-full lg:max-w-3xl max-w-2xl space-y-5">
-
-            {/* Badge */}
-            {/* <div>
-              <span className={`made-in-badge ${badgeVisible ? 'badge-visible' : ''}`}>
-                Proudly Now in India
-              </span>
-            </div> */}
-
-            {/* Headline */}
             <h1
               className="text-5xl md:text-6xl font-black text-white"
               style={{ fontFamily: "'DM Serif Display', serif", minHeight: '7.5rem' }}
@@ -305,7 +280,6 @@ export default function HeroOne() {
               )}
             </h1>
 
-            {/* Search bar */}
             {subtitle && (
               <div
                 onClick={() => setIsSearchOpen(true)}
@@ -326,7 +300,6 @@ export default function HeroOne() {
               </div>
             )}
 
-            {/* Subtitle */}
             {subtitle && (
               <p className="text-sm md:text-base text-gray-200 max-w-lg leading-relaxed">
                 {subtitle}
@@ -336,8 +309,8 @@ export default function HeroOne() {
           </div>
         </div>
 
-        {/* ── Nav panel — slides in from the right after typing ends ── */}
-        <div className={`nav-panel fixed top-1/2 right-1/3 z-50 ${navVisible ? 'nav-in' : ''}`}>
+        {/* Nav panel */}
+        <div className={`nav-panel fixed top-1/3 right-10 z-50 ${navVisible ? 'nav-in' : ''}`}>
           <HeaderOne />
         </div>
       </section>
