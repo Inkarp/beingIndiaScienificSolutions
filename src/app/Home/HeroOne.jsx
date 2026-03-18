@@ -282,11 +282,11 @@ export default function HeroOne() {
           <div className="w-full lg:max-w-3xl max-w-2xl space-y-5">
 
             {/* Badge */}
-            <div>
+            {/* <div>
               <span className={`made-in-badge ${badgeVisible ? 'badge-visible' : ''}`}>
                 Proudly Now in India
               </span>
-            </div>
+            </div> */}
 
             {/* Headline */}
             <h1
@@ -336,16 +336,8 @@ export default function HeroOne() {
           </div>
         </div>
 
-        {/* Scroll indicator */}
-        <div className="scroll-indicator hidden lg:flex">
-          <div className="w-[20px] h-[32px] border-2 border-white rounded-xl relative">
-            <div className="absolute top-[5px] left-1/2 -translate-x-1/2 w-[4px] h-[7px] bg-[#2F4191] rounded" />
-          </div>
-          <span className="text-[9px] font-bold tracking-widest uppercase">Scroll</span>
-        </div>
-
         {/* ── Nav panel — slides in from the right after typing ends ── */}
-        <div className={`nav-panel fixed top-1/3 right-6 z-50 ${navVisible ? 'nav-in' : ''}`}>
+        <div className={`nav-panel fixed top-1/2 right-1/3 z-50 ${navVisible ? 'nav-in' : ''}`}>
           <HeaderOne />
         </div>
       </section>
