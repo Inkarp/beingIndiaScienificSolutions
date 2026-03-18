@@ -13,7 +13,7 @@ const menuItems = [
   { name: "Blogs", href: "/blogs", icon: "◎" },
   { name: "About Us", href: "/about-us", icon: "◇" },
   { name: "Contact Us", href: "/contact-us", icon: "◉" },
-  { name: "Product Profile", href: "/product-profile", icon:,< },
+  { name: "Product Profile", href: "/product-profile", icon:"◇"  },
 ];
 
 export default function HeaderOne() {
