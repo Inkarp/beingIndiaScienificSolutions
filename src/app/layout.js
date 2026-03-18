@@ -1,17 +1,6 @@
 // app/layout.js
 import { Geist, Geist_Mono, Raleway, DM_Sans, Montserrat } from "next/font/google";
 import "./globals.css";
-import ScrollToTop from "./ScrollToTop";
-import Header from "./home/Header";
-import Footer from "./home/Footer";
-import ShareButton from "./ShareButton";
-import ChatModal from "./home/ChatModal";
-
-import ProductsSidebar from "./ProductsSidebar";
-import SocialContactBar from "./SocialContactBar";
-import FestivalUpdates from "./FestivalUpdates";
-import HeaderOne from "./home/HeaderOne";
-import HeroOne from "./home/HeroOne";
 
 
 const geistSans = Geist({

@@ -1,5 +1,5 @@
 
-import HeroOne from './home/HeroOne';
+import HeroOne from './Home/HeroOne';
 
 
 export default function Home() {
