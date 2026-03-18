@@ -1,4 +1,4 @@
-// SERVER COMPONENT (DO NOT add 'use client')
+
 import Model from './Model';
 
 export async function generateMetadata({ params }) {

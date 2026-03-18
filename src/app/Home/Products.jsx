@@ -77,7 +77,7 @@ const causes = [
   },
 ];
 
-export default function Offerings() {
+export default function Products() {
   return (
     <section className="py-5 relative">
       <div className="w-full mx-auto  text-center">

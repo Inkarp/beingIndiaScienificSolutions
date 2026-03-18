@@ -1,201 +1,155 @@
 'use client';
 
-import { useState } from "react";
-import Link from "next/link";
 import Image from "next/image";
-import { FiShare2 } from "react-icons/fi";
-import { FaWhatsapp } from "react-icons/fa";
+import Link from "next/link";
+import { FaArrowRight } from "react-icons/fa";
 
 const profiles = [
-
-  {
-    name: "Ovens",
-    description: "Hot air ovens for drying, sterilization and thermal testing.",
-    link: "/products/laboratory-ovens",
-    image: '/ovens.png',
-    icon: '/ovens.png',
-    socials: { whatsapp: "https://wa.me/918019828999" },
-  },
-  {
-    name: "Incubators",
-    description: "Controlled temperature chambers for cell culture and microbiology.",
-    link: "/products/incubators",
-    image: '/ovens.png',
-    icon: '/ovens.png',
-    socials: { whatsapp: "https://wa.me/918019828999" },
-  },
-
-  {
-    name: "Chillers",
-    description: "Precision temperature-controlled baths for lab workflows.",
-    link: "/products/chillers",
-    image:'/incubators.png',
-    icon: "/icon1.svg",
-    socials: { whatsapp: "https://wa.me/918019828999" },
-  },
-  {
-    name: "Water Baths",
-    description: "Precision temperature-controlled baths for lab workflows.",
-    link: "/products/water-baths",
-    image: '/incubators.png',
-    icon: "/icon1.svg",
-    socials: { whatsapp: "https://wa.me/918019828999" },
-  },
-  {
-    name: "Rotary Evaporators",
-    description: "Efficient solvent evaporation systems for chemistry labs.",
-    link: "/products/rotary-evaporators",
-    image:'/incubators.png',
-    icon: "/icon1.svg",
-    socials: { whatsapp: "https://wa.me/918019828999" },
-  },
-  {
-    name: "Pumps",
-    description: "Vacuum and peristaltic pumps for lab applications.",
-    link: "/products/pumps",
-    image: '/incubators.png',
-    icon: "/icon1.svg",
-    socials: { whatsapp: "https://wa.me/918019828999" },
-  },
+    {
+        name: "Ovens",
+        description: "Hot air ovens for drying, sterilization and thermal testing.",
+        link: "/products/laboratory-ovens",
+        icon: "/ovens.png",
+        color: "from-orange-400 to-red-500", // Unique gradient per category
+    },
+    {
+        name: "Incubators",
+        description: "Controlled temperature chambers for cell culture and microbiology.",
+        link: "/products/incubators",
+        icon: "/incubators.png",
+        color: "from-green-400 to-emerald-500",
+    },
+    {
+        name: "Chillers",
+        description: "Precision temperature-controlled systems for lab workflows.",
+        link: "/products/chillers",
+        icon: "/incubators.png",
+        color: "from-blue-400 to-cyan-500",
+    },
+    {
+        name: "Water Baths",
+        description: "Reliable temperature-controlled water baths for labs.",
+        link: "/products/water-baths",
+        icon: "/incubators.png",
+        color: "from-indigo-400 to-purple-500",
+    },
+    {
+        name: "Rotary Evaporators",
+        description: "Efficient solvent evaporation systems for chemistry labs.",
+        link: "/products/rotary-evaporators",
+        icon: "/incubators.png",
+        color: "from-pink-400 to-rose-500",
+    },
+    {
+        name: "Pumps",
+        description: "Vacuum and peristaltic pumps for lab applications.",
+        link: "/products/pumps",
+        icon: "/incubators.png",
+        color: "from-teal-400 to-sky-500",
+    },
+    {
+        name: "Cabinet",
+        description: "Vacuum and peristaltic pumps for lab applications.",
+        link: "/products/cabinet",
+        image: "/about.jpg",
+        icon: "/incubators.png",
+        socials: { whatsapp: "https://wa.me/918019828999" },
+    },
 
     {
-    name: "Cabinet",
-    description: "Vacuum and peristaltic pumps for lab applications.",
-    link: "/products/cabinet",
-    image: "/about.jpg",
-    icon: "/icon1.svg",
-    socials: { whatsapp: "https://wa.me/918019828999" },
-  },
-
-   {
-    name: "Freezers",
-    description: "Vacuum and peristaltic pumps for lab applications.",
-    link: "/products/freezers",
-    image: "/about.jpg",
-    icon: "/icon1.svg",
-    socials: { whatsapp: "https://wa.me/918019828999" },
-  },
+        name: "Freezers",
+        description: "Vacuum and peristaltic pumps for lab applications.",
+        link: "/products/freezers",
+        image: "/about.jpg",
+        icon: "/incubators.png",
+        socials: { whatsapp: "https://wa.me/918019828999" },
+    },
 
     {
-    name: "Digital Viscometer",
-    description: "Vacuum and peristaltic pumps for lab applications.",
-    link: "/products/digital-viscometer",
-    image: "/about.jpg",
-    icon: "/icon1.svg",
-    socials: { whatsapp: "https://wa.me/918019828999" },
-  },
-   {
-    name: "Muffle Furnance",
-    description: "Vacuum and peristaltic pumps for lab applications.",
-    link: "/products/muffle-furnance",
-    image: "/about.jpg",
-    icon: "/icon1.svg",
-    socials: { whatsapp: "https://wa.me/918019828999" },
-  },
+        name: "Digital Viscometer",
+        description: "Vacuum and peristaltic pumps for lab applications.",
+        link: "/products/digital-viscometer",
+        image: "/about.jpg",
+        icon: "/incubators.png",
+        socials: { whatsapp: "https://wa.me/918019828999" },
+    },
+    {
+        name: "Muffle Furnance",
+        description: "Vacuum and peristaltic pumps for lab applications.",
+        link: "/products/muffle-furnance",
+        image: "/about.jpg",
+        icon: "/incubators.png",
+        socials: { whatsapp: "https://wa.me/918019828999" },
+    },
 ];
 
-function ProfileCard({ profile, isOpen, index, setOpenIndex }) {
-  const { whatsapp } = profile.socials || {};
-
-  return (
-    <div className="w-full h-full group rounded-[30px] overflow-hidden hover:border border-[#2B7EC2] bg-white shadow-xl hover:shadow-md relative hover:scale-[1.02] transition-transform">
-      <Link href={profile.link} className="block">
-        <div className="bg-[#F5F5F5] p-5 h-[160px] flex flex-col justify-center">
-          <div className="flex items-center mb-3">
-            <div className="w-14 h-14 bg-white rounded-full grid place-items-center">
-              <Image
-                src={profile.icon}
-                alt={`${profile.name} Icon`}
-                width={40}
-                height={40}
-                className="group-hover:rotate-[360deg] transition-transform duration-800"
-              />
-            </div>
-            <h3 className="text-base font-bold pl-3 text-black">
-              {profile.name}
-            </h3>
-          </div>
-          <div className="w-full h-[1px] bg-gradient-to-r from-[#2B7EC2] to-[#2B7EC2]" />
-          <p className="text-xs text-black mt-2 line-clamp-3">
-            {profile.description}
-          </p>
-        </div>
-
-        <div className="relative w-full aspect-[16/10]">
-          <Image
-            src={profile.image}
-            alt={profile.name}
-            fill
-            className="object-contain"
-          />
-        </div>
-      </Link>
-
-      {/* {whatsapp && (
-        <div className="absolute bottom-3 right-3">
-          <div
-            className="relative"
-            onMouseEnter={() => setOpenIndex(index)}
-            onMouseLeave={() => setOpenIndex(null)}
-          >
-            <button
-              onClick={() => setOpenIndex(isOpen ? null : index)}
-              className="w-10 h-10 rounded-full bg-white shadow-md flex items-center justify-center"
-            >
-              <FiShare2 size={18} />
-            </button>
-
-            <div
-              className={`absolute right-12 top-1/2 -translate-y-1/2 flex gap-2 transition-all duration-300 ${
-                isOpen
-                  ? "opacity-100 translate-x-0"
-                  : "opacity-0 translate-x-6 pointer-events-none"
-              }`}
-            >
-              <a
-                href={whatsapp}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="p-2 bg-green-500 text-white rounded-full"
-              >
-                <FaWhatsapp size={18} />
-              </a>
-            </div>
-          </div>
-        </div>
-      )} */}
-    </div>
-  );
-}
-
 export default function Verticals() {
-  const [openIndex, setOpenIndex] = useState(null);
-
-  return (
-    <section className="relative w-full ">
-      <div className="text-center">
-        <h1 className="text-3xl font-bold font-[MaxOT]">
-          Explore Our <span className="text-[#E63946]">Scientific products</span>
-        </h1>
-        <p className="mt-4 text-lg text-gray-700">
-          From research to production, discover how our solutions support every lab need.
-        </p>
-      </div>
-
-      <div className="w-full py-3 flex justify-center">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-7 ">
-          {profiles.map((profile, index) => (
-            <div key={index} className="max-w-[350px] w-full mx-auto">
-              <ProfileCard
-                profile={profile}
-                index={index}
-                isOpen={openIndex === index}
-                setOpenIndex={setOpenIndex}
-              />
+    return (
+        <section className="w-full py-5 relative overflow-hidden">
+            {/* Heading */}
+            <div className="text-center max-w-3xl mx-auto relative z-10">
+                <h2 className="text-4xl md:text-5xl py-2 font-bold bg-gradient-to-r from-gray-900 to-slate-800 bg-clip-text text-transparent drop-shadow-lg">
+                    Everything you need <span className="text-[#2B7EC2] drop-shadow-md">in one place</span>
+                </h2>
+                <p className="mt-4 text-gray-600 text-lg max-w-2xl mx-auto leading-relaxed">
+                    Scientific instruments designed to support research, testing, and production
+                </p>
             </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
+
+            {/* Cards */}
+            <div className="w-full mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 p-6 relative z-10">
+                {profiles.map((profile, index) => (
+                    <Link
+                        key={index}
+                        href={profile.link}
+                        className="group bg-[#2F4191]  border-2 border-[#2F4191]/50 rounded-3xl p-8 flex items-start gap-6 hover:border-[#2B7EC2]/70 hover:shadow-2xl hover:shadow-[#2B7EC2]/20 hover:-translate-y-3 hover:rotate-x-1 transition-all duration-500 origin-bottom relative overflow-hidden"
+                    >
+                        {/* Category Badge */}
+                        <div className="absolute -top-4 -right-4 w-20 h-20 bg-white backdrop-blur-sm border-3 border-black/50 rounded-2xl flex items-center justify-center shadow-2xl rotate-15 group-hover:rotate-0 group-hover:scale-110 transition-all duration-700">
+                            <span className="text-lg font-bold text-gray-800 uppercase tracking-wider drop-shadow-md">{index + 1}</span>
+                        </div>
+
+                         <div className="w-[30px] h-[30px] text-white absolute bottom-4 right-4 ">
+                            <svg
+                                width="30"
+                                height="30"
+                                viewBox="0 0 30 30"
+                                fill="currentColor"
+                                xmlns="http://www.w3.org/2000/svg"
+                                className='spin-slow'
+                            >
+                                <path d="M14.2257 0.947522C14.6258 0.457905 15.3742 0.457905 15.7743 0.947522L16.8781 2.29817C17.181 2.66879 17.704 2.77283 18.1256 2.54633L19.6623 1.72088C20.2193 1.42165 20.9107 1.70806 21.093 2.31352L21.5959 3.98376C21.7339 4.44207 22.1773 4.73834 22.6535 4.69044L24.3891 4.51587C25.0182 4.45258 25.5474 4.98179 25.4841 5.61093L25.3096 7.34647C25.2617 7.8227 25.5579 8.2661 26.0162 8.40409L27.6865 8.90697C28.2919 9.08926 28.5783 9.7807 28.2791 10.3377L27.4537 11.8744C27.2272 12.296 27.3312 12.819 27.7018 13.1219L29.0525 14.2257C29.5421 14.6258 29.5421 15.3742 29.0525 15.7743L27.7018 16.8781C27.3312 17.181 27.2272 17.704 27.4537 18.1256L28.2791 19.6623C28.5783 20.2193 28.2919 20.9107 27.6865 21.093L26.0162 21.5959C25.5579 21.7339 25.2617 22.1773 25.3096 22.6535L25.4841 24.3891C25.5474 25.0182 25.0182 25.5474 24.3891 25.4841L22.6535 25.3096C22.1773 25.2617 21.7339 25.5579 21.5959 26.0162L21.093 27.6865C20.9107 28.2919 20.2193 28.5783 19.6623 28.2791L18.1256 27.4537C17.704 27.2272 17.181 27.3312 16.8781 27.7018L15.7743 29.0525C15.3742 29.5421 14.6258 29.5421 14.2257 29.0525L13.1219 27.7018C12.819 27.3312 12.296 27.2272 11.8744 27.4537L10.3377 28.2791C9.7807 28.5783 9.08926 28.2919 8.90697 27.6865L8.40409 26.0162C8.2661 25.5579 7.8227 25.2617 7.34647 25.3096L5.61093 25.4841C4.98179 25.5474 4.45258 25.0182 4.51587 24.3891L4.69044 22.6535C4.73834 22.1773 4.44207 21.7339 3.98376 21.5959L2.31352 21.093C1.70806 20.9107 1.42165 20.2193 1.72088 19.6623L2.54633 18.1256C2.77283 17.704 2.66879 17.181 2.29817 16.8781L0.947522 15.7743C0.457905 15.3742 0.457905 14.6258 0.947522 14.2257L2.29817 13.1219C2.66879 12.819 2.77283 12.296 2.54633 11.8744L1.72088 10.3377C1.42165 9.7807 1.70806 9.08926 2.31352 8.90697L3.98376 8.40409C4.44207 8.2661 4.73834 7.8227 4.69044 7.34647L4.51587 5.61093C4.45258 4.98179 4.98179 4.45258 5.61093 4.51587L7.34647 4.69044C7.8227 4.73834 8.2661 4.44207 8.40409 3.98376L8.90697 2.31352C9.08926 1.70806 9.7807 1.42165 10.3377 1.72088L11.8744 2.54633C12.296 2.77283 12.819 2.66879 13.1219 2.29817L14.2257 0.947522Z" />
+                            </svg>
+
+                            <FaArrowRight
+                                size={12}
+                                className="absolute top-1/2 left-1/2 text-black transform -translate-x-1/2 -translate-y-1/2 "
+                            />
+                        </div>
+
+                        {/* Icon Orb */}
+                        <div className={`w-28 h-28 rounded-3xl bg-white flex items-center justify-center shrink-0 shadow-xl group-hover:shadow-2xl group-hover:scale-110 transition-all duration-500 ring-2 ring-[#2F4191]/50 group-hover:ring-[#2B7EC2]/50`}>
+                            <Image
+                                src={profile.icon}
+                                alt={profile.name}
+                                width={100}
+                                height={100}
+                                className="group-hover:scale-110 transition-transform duration-300 group-hover:invert-0"
+                            />
+                        </div>
+
+                        {/* Content */}
+                        <div className="min-w-0 flex-1 pt-4">
+                            <h3 className="text-xl md:text-2xl font-bold text-white group-hover:text-white transition-colors duration-300 line-clamp-2">
+                                {profile.name}
+                            </h3>
+                            <p className="mt-3 text-sm md:text-base text-white leading-relaxed line-clamp-3 group-hover:text-white transition-colors">
+                                {profile.description}
+                            </p>
+                        </div>                    
+                    </Link>
+                ))}
+            </div>
+        </section>
+    );
 }

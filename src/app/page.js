@@ -1,24 +1,25 @@
-import Hero from './Home/Hero';
-import About from './Home/About';
-import Offerings from './Home/Offerings';
-import Blogs from './Home/Blogs';
-import Customers from './Home/Customers';
-import ProductsList from './Home/ProductsList';
-import Products from './Home/Products';
-import Testimonials from './Home/Testimonials';
+import Hero from './home/Hero';
+import About from './home/About';
+import Blogs from './home/Blogs';
+import Customers from './home/Customers';
+import Products from './home/Products';
+import Testimonials from './home/Testimonials';
+import HeroNew from './home/HeroNew';
+import HeroOne from './home/HeroOne';
 
 
 export default function Home() {
   return (
-    <div className="">
-      <Hero />
+    <div className="space-y-2">
+      {/* <HeroNew />
+      <HeroOne />
+      <Hero />    
       <Products />
-      {/* <ProductsList /> */}
-      {/* <Offerings /> */}
       <About />
       <Customers />
       <Blogs />
-      <Testimonials />  
+      <Testimonials />   */}
+      <HeroOne />
     </div>
   );
 }

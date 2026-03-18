@@ -2,14 +2,16 @@
 import { Geist, Geist_Mono, Raleway, DM_Sans, Montserrat } from "next/font/google";
 import "./globals.css";
 import ScrollToTop from "./ScrollToTop";
-import Header from "./Home/Header";
-import Footer from "./Home/Footer";
+import Header from "./home/Header";
+import Footer from "./home/Footer";
 import ShareButton from "./ShareButton";
-import ChatModal from "./Home/ChatModal";
+import ChatModal from "./home/ChatModal";
 
 import ProductsSidebar from "./ProductsSidebar";
 import SocialContactBar from "./SocialContactBar";
 import FestivalUpdates from "./FestivalUpdates";
+import HeaderOne from "./home/HeaderOne";
+import HeroOne from "./home/HeroOne";
 
 
 const geistSans = Geist({
@@ -62,17 +64,7 @@ export default function RootLayout({ children }) {
         <link rel="preload" href="/favicon.png" as="image" />
       </head>
       <body className="bg-white">
-        <ScrollToTop />
-        <Header />
-        {/* <ShareButton /> */}
-        <SocialContactBar />
-        <FestivalUpdates />
-        <ProductsSidebar />
-        <main className="w-[90%] mx-auto pt-20">
-          {children}
-        </main>
-        <ChatModal />
-        <Footer />
+        {children}
       </body>
     </html>
   );
